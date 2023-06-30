@@ -109,9 +109,18 @@ float ZVector::getGapEntropy() const
 {
     unsigned i;
     float gapEntropy = 0.0f;
+    int g_i;
+    // std::cout << "\n";
 
-    for (i = 0; i < this->gap_vector.size(); i++) {
-        gapEntropy = gapEntropy + floor(log2(this->gap_vector[i])) + 1;
+    for (i = 0; i < this->int_vector.size(); i++) {
+        if (i == 0) {
+            g_i = this->int_vector[i] - 1;
+        }
+        else {
+            g_i = this->int_vector[i] - this->int_vector[i - 1] - 1;
+        }
+        // std::cout << "int_v[i] : " << this->int_vector[i]<< " , g_i: "  << g_i << " , log(g_i): " << log2(g_i) << std::endl;
+        gapEntropy = gapEntropy + floor(log2(g_i)) + 1;
     }
     return gapEntropy;
 }
@@ -136,6 +145,7 @@ std::vector<int> ZVector::newRLEVector() const
         count = count + 1;
     }
 
+    // Agregar 1 al final
     return new_rle_vector;
 }
 
@@ -147,13 +157,29 @@ std::vector<int> ZVector::getRLEVector() const
 float ZVector::getRLEEntropy() const
 {
     unsigned i;
+    float rleZerosEntropy = 0.0f;
+    float rleOnesEntropy = 0.0f;
     float rleEntropy = 0.0f;
     float z_i, l_i;
 
-    for (i = 0; i < this->gap_vector.size(); i = i + 2) {
+    std::cout << std::endl;
+    for (i = 0; i < this->rle_vector.size(); i = i + 2) {
+
         z_i = floor(log2(this->rle_vector[i] - 1)) + 1;
-        l_i = floor(log2(this->rle_vector[i + 1] - 1)) + 1;
-        rleEntropy = rleEntropy + z_i + l_i;
+        std::cout << "rle_v[i]: " << rle_vector[i] << " , z_i: " << z_i << std::endl;
+
+        rleZerosEntropy = rleZerosEntropy + z_i;
     }
-    return rleEntropy;
+    std::cout << "rleZerosEntropy: " << rleZerosEntropy << std::endl;
+
+    for (i = 1; i < this->rle_vector.size(); i = i + 2) {
+
+        l_i = floor(log2(this->rle_vector[i] - 1)) + 1;
+        std::cout << "rle_v[i]: " << rle_vector[i] << " , l_i: " << l_i << std::endl;
+
+        rleOnesEntropy = rleOnesEntropy + l_i;
+    }
+
+    std::cout << "rleOnesEntropy: " << rleOnesEntropy << std::endl;
+    return rleZerosEntropy + rleOnesEntropy;
 }
