@@ -1,5 +1,5 @@
-#include "matrix.h"
-#include "zvector.h"
+#include "matrix/matrix.h"
+#include "zvector/zvector.h"
 
 void print_vector(std::vector<int> vector) {
     for (unsigned i = 0; i < vector.size(); i++) {
@@ -11,8 +11,9 @@ void print_vector(std::vector<int> vector) {
 int main(int argc, char * argv[]) {
     if (argc > 1)
     {
-        std::cout << "file name = " << argv[1] << std::endl;
-        Matrix matrix(argv[1]);
+        std::string data = argv[1];
+        std::cout << "file name = " << data << std::endl;
+        Matrix matrix(data);
         ZVector zvector(matrix.getMatrix());
 
         std::cout << "\nMatrix: " << std::endl;
@@ -26,7 +27,7 @@ int main(int argc, char * argv[]) {
 
         std::cout << "\nWorst case Entropy: " << zvector.getWorstCaseEntropy() << std::endl;
 
-        std::cout << "\nGap vector:" << std::endl;
+        std::cout << "\nGap vector/Delta values? pag 233:" << std::endl;
         print_vector(zvector.getGapVector());
         std::cout << "Gap Entropy: " << zvector.getGapEntropy() << std::endl;
 

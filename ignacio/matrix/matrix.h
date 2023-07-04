@@ -12,8 +12,7 @@ class Matrix {
         std::vector<std::vector<int> > m_matrix;
 
     public:
-        Matrix(unsigned, unsigned, int); // rowsize, colsize, initial value for every cell
-        Matrix(const char *);            // make matrix from file
+        Matrix(const std::string);            // make matrix from file
         ~Matrix();
         
         int& operator()(const unsigned &, const unsigned &);

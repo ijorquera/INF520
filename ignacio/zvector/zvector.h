@@ -1,6 +1,8 @@
+#define _USE_MATH_DEFINES
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <climits>
 
 class ZVector {
     private:

@@ -1,25 +1,16 @@
 #include "matrix.h"
 
-// Constructor for Any Matrix
-Matrix::Matrix(unsigned rowSize, unsigned colSize, int initial){
-    m_rowSize = rowSize;
-    m_colSize = colSize;
-    m_matrix.resize(rowSize);
-
-    for (unsigned i = 0; i < m_matrix.size(); i++)
-    {
-        m_matrix[i].resize(colSize, initial);
-    }
-}
-
 // Make a matrix from a file
-Matrix::Matrix(const char * fileName){
-    std::ifstream file_A(fileName); // input file stream to open the file A.txt
+Matrix::Matrix(const std::string fileName){
+    
+    std::string dir = "data/";
+    std::string ext = ".txt";
+    std::ifstream file_A(dir + fileName + ext); // input file stream to open the file A.txt
 
     // Task 1
     // Keeps track of the Column and row sizes
-    int colSize = 0;
-    int rowSize = 0;
+    unsigned colSize = 0;
+    unsigned rowSize = 0;
     
     // read it as a vector
     std::string line_A;

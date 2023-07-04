@@ -4,16 +4,22 @@ CC = g++
 #  -g     - this flag adds debugging information to the executable file
 #  -Wall  - this flag is used to turn on most compiler warnings
 CFLAGS = -Wall -g
+STD_V = -std=c++17
 
-main: main.o matrix.o zvector.o
+main: clean main.o matrix.o zvector.o
 	$(CC) $(CFLAGS) -o main main.o matrix.o zvector.o
 
-main.o: main.cpp matrix.h zvector.h
-	$(CC) $(CFLAGS) -c main.cpp
+main.o: main.cpp
+	$(CC) $(CFLAGS) -c main.cpp $(STD_V)
 
-matrix.o: matrix.h
+matrix.o: matrix/matrix.h
+	$(CC) $(CFLAGS) -c matrix/matrix.cpp
 
-zvector.o: zvector.h
+zvector.o: zvector/zvector.h
+	$(CC) $(CFLAGS) -c zvector/zvector.cpp
+
+trie.o: trie/trie.h
+	$(CC) $(CFLAGS) -c trie/trie.cpp
 
 clean:
 	$(RM) main main.o matrix.o zvector.o

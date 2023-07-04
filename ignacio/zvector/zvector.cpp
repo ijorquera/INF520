@@ -19,9 +19,9 @@ void zorder(std::vector<int> &vtr, std::vector<std::vector<int>> m, int y0, int 
 ZVector::ZVector(std::vector<std::vector<int>> binary_matrix)
 {
     zorder(this->zv_vector, binary_matrix, 0, 0, binary_matrix.size());
+    this->int_vector = this->newIntVector();
     this->gap_vector = this->newGapVector();
     this->rle_vector = this->newRLEVector();
-    this->int_vector = this->newIntVector();
 }
 
 ZVector::~ZVector()
@@ -41,7 +41,7 @@ int &ZVector::operator[](const unsigned &idx)
 std::vector<int> ZVector::newIntVector() const
 {
     std::vector<int> new_int_vector;
-    int i = 0;
+    unsigned long int i = 0;
 
     for (i = 0; i < this->zv_vector.size(); i++) {
         if (this->zv_vector[i] == 1) {
@@ -57,27 +57,25 @@ std::vector<int> ZVector::getIntVector() const
     return this->int_vector;
 }
 
-unsigned factorial(unsigned start, unsigned finish)
-{
-    if (start == 0 || start == 1 || start == finish)
-        return 1;
-    return start * factorial(start - 1, finish);
-}
-
-float combination(unsigned u, unsigned n)
-{
-    return (float)factorial(u, n) / (float)factorial(u-n, 0);
-}
-
 int ZVector::getWorstCaseEntropy() const
 {
+    // For an integer universe U = [0 ... u), ...
+    // denote the class S \subseteq U such that |S| = n
+    // We assume S = {x1, x2, ..., xn}, for 0 <= x1 <= ... <= xn < u
     // Worst case we need B(n, u) = ceil(lg(C(u, n))) bits
-    unsigned u = this->zv_vector.size();
-    unsigned n = this->int_vector.size();
+    // that means, n = amount of integers in our subset S
+    //             u = biggest integer in our universe U, such that xn < u, xn \in S
+    //
+    // if we take the biggest C unsigned integer u = 4294967295 or 0xffffffff, we have that u >> n
+    // and since u is too big we can use Stirling to approximate the convergence of the factorial
+    //
+    // such that the new equation for worst case is
+    // B(n, u) = n lg(u/n) + n lg(e) = n (lg(u/n) + lg(e)), which is around O(lg(u)) bits since u >> n
 
-    float comb = combination(u, n);
+    float u = (float)UINT_MAX;
+    float n = (float)this->int_vector.size(); // amount of integers in our subset S
 
-    return ceil(log2(comb));
+    return n * (log2(u/n) + M_LOG2E); // M_LOG2E equivale a log2(e) y tiene valor definido en cmath
 }
 
 std::vector<int> ZVector::newGapVector() const
@@ -85,7 +83,6 @@ std::vector<int> ZVector::newGapVector() const
     std::vector<int> new_gap_vector;
     unsigned i = 0;
     int gaps = 0;
-    int prev_gap = -1;
 
     for (i = 0; i < this->zv_vector.size(); i++) {
         if (this->zv_vector[i] == 0) {
@@ -109,19 +106,28 @@ float ZVector::getGapEntropy() const
 {
     unsigned i;
     float gapEntropy = 0.0f;
-    int g_i;
-    // std::cout << "\n";
+    // int g_i;
+    // int g_i_prev;
+    std::cout << "\n";
 
-    for (i = 0; i < this->int_vector.size(); i++) {
-        if (i == 0) {
-            g_i = this->int_vector[i] - 1;
-        }
-        else {
-            g_i = this->int_vector[i] - this->int_vector[i - 1] - 1;
-        }
-        // std::cout << "int_v[i] : " << this->int_vector[i]<< " , g_i: "  << g_i << " , log(g_i): " << log2(g_i) << std::endl;
-        gapEntropy = gapEntropy + floor(log2(g_i)) + 1;
+    // for (i = 0; i < this->gap_vector.size(); i++) {
+    for (i = 0; i < this->gap_vector.size() - 1; i++) {
+        // gapEntropy = gapEntropy + floor(log2(gap_vector[i])) + 1; // paper profe
+        // std::cout << "gap_vector[" << i << "]: " << this->gap_vector[i]<< " , log(g_" << i << "): " << log2(this->gap_vector[i]) << std::endl;
+        gapEntropy = gapEntropy + ceil(log2(gap_vector[i + 1] - gap_vector[i])); // information retrieval implementing and evaluating search engines, p215 (234 del pdf)
     }
+    // for (i = 0; i < this->int_vector.size(); i++) {
+    //     if (i == 0) {
+    //         g_i = this->int_vector[i];
+    //     }
+    //     else {
+    //         // g_i = this->int_vector[i] - this->int_vector[i - 1] - 1;
+    //         g_i = this->int_vector[i] - g_i_prev - 1;
+    //     }
+    //     g_i_prev = g_i;
+    //     std::cout << "int_vector[" << i << "]: " << this->int_vector[i]<< " , g_" << i << ": "  << g_i << " , log(g_" << i << "): " << log2(g_i) << std::endl;
+    //     gapEntropy = gapEntropy + floor(log2(g_i)) + 1;
+    // }
     return gapEntropy;
 }
 
@@ -134,10 +140,7 @@ std::vector<int> ZVector::newRLEVector() const
     int prev = 0;
 
     for (i = 0; i <= this->zv_vector.size(); i++) {
-        if (i == this->zv_vector.size()) {
-            new_rle_vector.push_back(count);
-        }
-        else if (this->zv_vector[i] != prev) {
+        if (this->zv_vector[i] != prev) {
             new_rle_vector.push_back(count);
             count = 0;
             prev = this->zv_vector[i];
@@ -159,27 +162,20 @@ float ZVector::getRLEEntropy() const
     unsigned i;
     float rleZerosEntropy = 0.0f;
     float rleOnesEntropy = 0.0f;
-    float rleEntropy = 0.0f;
     float z_i, l_i;
 
     std::cout << std::endl;
+    // el ciclo asume que rle_vector siempre tendra largo par (secuencia de 0^z 1^l),
     for (i = 0; i < this->rle_vector.size(); i = i + 2) {
 
         z_i = floor(log2(this->rle_vector[i] - 1)) + 1;
-        std::cout << "rle_v[i]: " << rle_vector[i] << " , z_i: " << z_i << std::endl;
+        l_i = floor(log2(this->rle_vector[i + 1] - 1)) + 1;
+        std::cout << "rle_v[" << i << "]: " << rle_vector[i] << " , z_" << i << ": " << z_i <<" | rle_v[" << i+1 << "]: " << rle_vector[i+1] << " , l_" << i << ": " << l_i << std::endl;
 
         rleZerosEntropy = rleZerosEntropy + z_i;
-    }
-    std::cout << "rleZerosEntropy: " << rleZerosEntropy << std::endl;
-
-    for (i = 1; i < this->rle_vector.size(); i = i + 2) {
-
-        l_i = floor(log2(this->rle_vector[i] - 1)) + 1;
-        std::cout << "rle_v[i]: " << rle_vector[i] << " , l_i: " << l_i << std::endl;
-
         rleOnesEntropy = rleOnesEntropy + l_i;
     }
-
+    std::cout << "rleZerosEntropy: " << rleZerosEntropy << std::endl;
     std::cout << "rleOnesEntropy: " << rleOnesEntropy << std::endl;
     return rleZerosEntropy + rleOnesEntropy;
 }
