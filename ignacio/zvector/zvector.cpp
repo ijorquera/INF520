@@ -112,22 +112,10 @@ float ZVector::getGapEntropy() const
 
     // for (i = 0; i < this->gap_vector.size(); i++) {
     for (i = 0; i < this->gap_vector.size() - 1; i++) {
-        // gapEntropy = gapEntropy + floor(log2(gap_vector[i])) + 1; // paper profe
-        // std::cout << "gap_vector[" << i << "]: " << this->gap_vector[i]<< " , log(g_" << i << "): " << log2(this->gap_vector[i]) << std::endl;
-        gapEntropy = gapEntropy + ceil(log2(gap_vector[i + 1] - gap_vector[i])); // information retrieval implementing and evaluating search engines, p215 (234 del pdf)
+        gapEntropy = gapEntropy + floor(log2(gap_vector[i])) + 1; // paper profe
+        std::cout << "gap_vector[" << i << "]: " << this->gap_vector[i]<< " , log(g_" << i << "): " << log2(this->gap_vector[i]) << std::endl;
+        // gapEntropy = gapEntropy + ceil(log2(gap_vector[i + 1] - gap_vector[i])); // information retrieval implementing and evaluating search engines, p215 (234 del pdf)
     }
-    // for (i = 0; i < this->int_vector.size(); i++) {
-    //     if (i == 0) {
-    //         g_i = this->int_vector[i];
-    //     }
-    //     else {
-    //         // g_i = this->int_vector[i] - this->int_vector[i - 1] - 1;
-    //         g_i = this->int_vector[i] - g_i_prev - 1;
-    //     }
-    //     g_i_prev = g_i;
-    //     std::cout << "int_vector[" << i << "]: " << this->int_vector[i]<< " , g_" << i << ": "  << g_i << " , log(g_" << i << "): " << log2(g_i) << std::endl;
-    //     gapEntropy = gapEntropy + floor(log2(g_i)) + 1;
-    // }
     return gapEntropy;
 }
 
