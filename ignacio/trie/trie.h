@@ -1,37 +1,23 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <cmath>
 
-class Trie {
+class Node {
     private:
-        int value; 
-        Trie* left; 
-        Trie* right; 
+        std::string value;
+        Node* left;
+        Node* right;
+        unsigned heigth;
 
     public:
-        Trie();
-        Trie(std::vector<int>, int);
-        Trie(std::vector<std::vector<int>>);
-        ~Trie();
-
-        Trie* operator[](const unsigned &);
+        Node(char*, int);
+        Node(std::vector<int>);
+        void printPreorder(Node *root, int);
+        int getTrieHeigth();
+        ~Node();
+        Node* operator[](const char *);
 
         std::vector<int> getVector() const;
-        float trieEntropy() const;
-
-        // std::vector<int> newIntVector() const;
-        // std::vector<int> getIntVector() const;
-        // float getWorstCaseEntropy() const;
-
-        // // Algoritmos de compresion
-        // // Gap(S)
-        // std::vector<int> newGapVector() const;
-        // std::vector<int> getGapVector() const;
-        // float getGapEntropy() const;
-
-        // // RunLen(S)
-        // std::vector<int> newRLEVector() const;
-        // std::vector<int> getRLEVector() const;
-        // float getRLEEntropy() const;
-
+        unsigned getTrieEntropy(std::vector<int>) const;
 };

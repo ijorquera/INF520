@@ -1,5 +1,6 @@
 #include "matrix/matrix.h"
 #include "zvector/zvector.h"
+#include "trie/trie.h"
 
 void print_vector(std::vector<int> vector) {
     for (unsigned i = 0; i < vector.size(); i++) {
@@ -15,6 +16,7 @@ int main(int argc, char * argv[]) {
         std::cout << "file name = " << data << std::endl;
         Matrix matrix(data);
         ZVector zvector(matrix.getMatrix());
+        Node trie(zvector.getIntVector());
 
         std::cout << "\nMatrix: " << std::endl;
         matrix.print();
@@ -36,6 +38,11 @@ int main(int argc, char * argv[]) {
         print_vector(zvector.getRLEVector());
         std::cout << "\nRLE Entropy: " << zvector.getRLEEntropy() << std::endl;
         std::cout << "\nH_0(RLE):" << zvector.get_H0_RLEEntropy() << std::endl;
+
+        std::cout << "\nTrie Peorder: " << std::endl;
+        trie.printPreorder(&trie, 0);
+        std::cout << std::endl;
+        std::cout << "Trie Entropy: " << trie.getTrieEntropy(zvector.getIntVector()) << std::endl;
     }
     else
     {
@@ -44,3 +51,5 @@ int main(int argc, char * argv[]) {
     }
     return 0;
 }
+
+// 00011111110001101100
