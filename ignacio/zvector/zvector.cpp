@@ -106,17 +106,52 @@ float ZVector::getGapEntropy() const
 {
     unsigned i;
     float gapEntropy = 0.0f;
-    // int g_i;
-    // int g_i_prev;
+    int g_i;
     std::cout << "\n";
 
-    // for (i = 0; i < this->gap_vector.size(); i++) {
-    for (i = 0; i < this->gap_vector.size() - 1; i++) {
-        gapEntropy = gapEntropy + floor(log2(gap_vector[i])) + 1; // paper profe
-        std::cout << "gap_vector[" << i << "]: " << this->gap_vector[i]<< " , log(g_" << i << "): " << log2(this->gap_vector[i]) << std::endl;
-        // gapEntropy = gapEntropy + ceil(log2(gap_vector[i + 1] - gap_vector[i])); // information retrieval implementing and evaluating search engines, p215 (234 del pdf)
+    for (i = 0; i < this->gap_vector.size(); i++) {
+        // La menor cantidad de bits que puede llegar a necesitar cada numero
+        // del vector es floor(log2(1)) + 1 = 0 + 1 = 1
+        g_i = 1;
+
+        if (gap_vector[i] > 0) {
+            g_i = floor(log2(gap_vector[i])) + 1;
+        }
+
+        gapEntropy = gapEntropy + g_i;
+        std::cout << "gap_vector[" << i << "]: " << this->gap_vector[i]<< " | g_" << i << ": " << g_i << " | floor(log2(g_" << i << ")) + 1: " << floor(log2(g_i)) + 1 << std::endl;
     }
+    std::cout << "GapEntropy: ";
     return gapEntropy;
+}
+
+float ZVector::get_H0_GapEntropy() const
+{
+    unsigned i;
+    unsigned n = this->gap_vector.size();
+    std::vector<int> gap_vector_uniques = this->gap_vector;
+
+    // Remove repeated elements from our copy of the gap_vector
+    std::sort(gap_vector_uniques.begin(), gap_vector_uniques.end());
+    auto uniques = std::unique(gap_vector_uniques.begin(), gap_vector_uniques.end());
+    gap_vector_uniques.erase(uniques, gap_vector_uniques.end());
+
+    float H0_gapEntropy = 0.0f;
+    int n_i;
+    float p_i, p_i_inv, H0_gapEntropy_i;
+    std::cout << "\n";
+
+    for (i = 0; i < gap_vector_uniques.size(); i++) {
+        n_i = std::count(this->gap_vector.begin(), this->gap_vector.end(), gap_vector_uniques[i]);
+        p_i = (float)n_i / (float)n;
+        p_i_inv = (float)n / (float)n_i;
+        H0_gapEntropy_i = p_i * log2(p_i_inv);
+        H0_gapEntropy = H0_gapEntropy + H0_gapEntropy_i;
+
+        std::cout << "n_" << gap_vector_uniques[i] << ": " << n_i << " | (" << n_i << " / " << n << ") * log2(" << n << " / " << n_i << "): " << H0_gapEntropy_i << std::endl;
+    }
+    std::cout << "H0_GapEntropy: ";
+    return H0_gapEntropy;
 }
 
 std::vector<int> ZVector::newRLEVector() const
@@ -155,15 +190,53 @@ float ZVector::getRLEEntropy() const
     std::cout << std::endl;
     // el ciclo asume que rle_vector siempre tendra largo par (secuencia de 0^z 1^l),
     for (i = 0; i < this->rle_vector.size(); i = i + 2) {
+        // La menor cantidad de bits que puede llegar a necesitar cada numero
+        // del vector es floor(log2(1)) + 1 = 0 + 1 = 1
+        z_i = 1;
+        l_i = 1;
 
-        z_i = floor(log2(this->rle_vector[i] - 1)) + 1;
-        l_i = floor(log2(this->rle_vector[i + 1] - 1)) + 1;
-        std::cout << "rle_v[" << i << "]: " << rle_vector[i] << " , z_" << i << ": " << z_i <<" | rle_v[" << i+1 << "]: " << rle_vector[i+1] << " , l_" << i << ": " << l_i << std::endl;
+        if (this->rle_vector[i] - 1 > 0) {
+            z_i = floor(log2(this->rle_vector[i] - 1)) + 1;
+        }
+        if (this->rle_vector[i + 1] - 1 > 0) {
+            l_i = floor(log2(this->rle_vector[i + 1] - 1)) + 1;
+        }
+        std::cout << "rle_v[" << i << "]: " << rle_vector[i] << " , z_" << floor(i/2) << ": " << z_i <<" | rle_v[" << i+1 << "]: " << rle_vector[i+1] << " , l_" << floor(i/2) << ": " << l_i << std::endl;
 
         rleZerosEntropy = rleZerosEntropy + z_i;
         rleOnesEntropy = rleOnesEntropy + l_i;
     }
-    std::cout << "rleZerosEntropy: " << rleZerosEntropy << std::endl;
-    std::cout << "rleOnesEntropy: " << rleOnesEntropy << std::endl;
+    std::cout << "RLEZerosEntropy: " << rleZerosEntropy << std::endl;
+    std::cout << "RLEOnesEntropy: " << rleOnesEntropy << std::endl;
+    std::cout << "RLEEntropy: ";
     return rleZerosEntropy + rleOnesEntropy;
+}
+
+float ZVector::get_H0_RLEEntropy() const
+{
+    unsigned i;
+    unsigned n = this->rle_vector.size();
+    std::vector<int> rle_vector_uniques = this->rle_vector;
+
+    // Remove repeated elements from our copy of the rle_vector
+    std::sort(rle_vector_uniques.begin(), rle_vector_uniques.end());
+    auto uniques = std::unique(rle_vector_uniques.begin(), rle_vector_uniques.end());
+    rle_vector_uniques.erase(uniques, rle_vector_uniques.end());
+
+    float H0_rleEntropy = 0.0f;
+    int n_i;
+    float p_i, p_i_inv, H0_rleEntropy_i;
+    std::cout << "\n";
+
+    for (i = 0; i < rle_vector_uniques.size(); i++) {
+        n_i = std::count(this->rle_vector.begin(), this->rle_vector.end(), rle_vector_uniques[i]);
+        p_i = (float)n_i / (float)n;
+        p_i_inv = (float)n / (float)n_i;
+        H0_rleEntropy_i = p_i * log2(p_i_inv);
+        H0_rleEntropy = H0_rleEntropy + H0_rleEntropy_i;
+
+        std::cout << "n_" << rle_vector_uniques[i] << ": " << n_i << " | (" << n_i << " / " << n << ") * log2(" << n << " / " << n_i << "): " << H0_rleEntropy_i << std::endl;
+    }
+    std::cout << "H0_RLEEntropy: ";
+    return H0_rleEntropy;
 }

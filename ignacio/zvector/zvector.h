@@ -1,8 +1,9 @@
 #define _USE_MATH_DEFINES
+#include <algorithm>
 #include <vector>
 #include <cmath>
-#include <iostream>
 #include <climits>
+#include <iostream>
 
 class ZVector {
     private:
@@ -27,10 +28,11 @@ class ZVector {
         std::vector<int> newGapVector() const;
         std::vector<int> getGapVector() const;
         float getGapEntropy() const;
+        float get_H0_GapEntropy() const;
 
         // RunLen(S)
         std::vector<int> newRLEVector() const;
         std::vector<int> getRLEVector() const;
         float getRLEEntropy() const;
-
+        float get_H0_RLEEntropy() const;
 };

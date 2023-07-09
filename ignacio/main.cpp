@@ -27,13 +27,15 @@ int main(int argc, char * argv[]) {
 
         std::cout << "\nWorst case Entropy: " << zvector.getWorstCaseEntropy() << std::endl;
 
-        std::cout << "\nGap vector/Delta values? pag 233:" << std::endl;
+        std::cout << "\nGap vector:" << std::endl;
         print_vector(zvector.getGapVector());
-        std::cout << "Gap Entropy: " << zvector.getGapEntropy() << std::endl;
+        std::cout << "\nGap Entropy: " << zvector.getGapEntropy() << std::endl;
+        std::cout << "\nH_0(Gap):" << zvector.get_H0_GapEntropy() << std::endl;
 
-        std::cout << "\nRLE vector:" << std::endl;
+        std::cout << "\n\nRLE vector:" << std::endl;
         print_vector(zvector.getRLEVector());
-        std::cout << "RLE Entropy: " << zvector.getRLEEntropy() << std::endl;
+        std::cout << "\nRLE Entropy: " << zvector.getRLEEntropy() << std::endl;
+        std::cout << "\nH_0(RLE):" << zvector.get_H0_RLEEntropy() << std::endl;
     }
     else
     {
