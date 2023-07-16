@@ -14,6 +14,7 @@ class ZVector {
 
     public:
         ZVector(std::vector<std::vector<int>>);
+        ZVector(std::vector<int>);
         ~ZVector();
 
         std::vector<int> getVector() const;

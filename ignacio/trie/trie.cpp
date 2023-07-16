@@ -159,3 +159,4 @@ unsigned Node::getTrieEntropy(std::vector<int> int_vector) const
 
     return trie_entropy;
 }
+

@@ -24,6 +24,15 @@ ZVector::ZVector(std::vector<std::vector<int>> binary_matrix)
     this->rle_vector = this->newRLEVector();
 }
 
+ZVector::ZVector(std::vector<int> z_order_vector)
+{
+    this->zv_vector = z_order_vector;
+    this->int_vector = this->newIntVector();
+    this->gap_vector = this->newGapVector();
+    this->rle_vector = this->newRLEVector();
+}
+
+
 ZVector::~ZVector()
 {
 }

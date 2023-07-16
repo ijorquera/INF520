@@ -6,8 +6,8 @@ CC = g++
 CFLAGS = -Wall -g
 STD_V = -std=c++17
 
-main: clean main.o matrix.o zvector.o trie.o
-	$(CC) $(CFLAGS) -o main main.o matrix.o zvector.o trie.o
+main: clean main.o matrix.o zvector.o trie.o rtrie.o
+	$(CC) $(CFLAGS) -o main main.o matrix.o zvector.o trie.o rtrie.o
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) -c main.cpp $(STD_V)
@@ -21,8 +21,11 @@ zvector.o: zvector/zvector.h
 trie.o: trie/trie.h
 	$(CC) $(CFLAGS) -c trie/trie.cpp
 
+rtrie.o: rtrie/rtrie.h
+	$(CC) $(CFLAGS) -c rtrie/rtrie.cpp
+
 clean:
-	$(RM) main main.o matrix.o zvector.o trie.o
+	$(RM) main main.o matrix.o zvector.o trie.o rtrie.o
 
 clean_o:
-	$(RM) main.o matrix.o zvector.o trie.o
+	$(RM) main.o matrix.o zvector.o trie.o rtrie.o
