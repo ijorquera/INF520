@@ -29,7 +29,7 @@ class ZVector {
         std::vector<int> newGapVector() const;
         std::vector<int> getGapVector() const;
         float getGapEntropy() const;
-        float get_H0_GapEntropy() const;
+        double get_H0_GapEntropy() const;
 
         // RunLen(S)
         std::vector<int> newRLEVector() const;

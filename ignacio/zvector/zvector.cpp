@@ -134,7 +134,7 @@ float ZVector::getGapEntropy() const
     return gapEntropy;
 }
 
-float ZVector::get_H0_GapEntropy() const
+double ZVector::get_H0_GapEntropy() const
 {
     unsigned i;
     unsigned n = this->gap_vector.size();
@@ -145,15 +145,15 @@ float ZVector::get_H0_GapEntropy() const
     auto uniques = std::unique(gap_vector_uniques.begin(), gap_vector_uniques.end());
     gap_vector_uniques.erase(uniques, gap_vector_uniques.end());
 
-    float H0_gapEntropy = 0.0f;
+    double H0_gapEntropy = 0.0f;
     int n_i;
-    float p_i, p_i_inv, H0_gapEntropy_i;
+    double p_i, p_i_inv, H0_gapEntropy_i;
     std::cout << "\n";
 
     for (i = 0; i < gap_vector_uniques.size(); i++) {
         n_i = std::count(this->gap_vector.begin(), this->gap_vector.end(), gap_vector_uniques[i]);
-        p_i = (float)n_i / (float)n;
-        p_i_inv = (float)n / (float)n_i;
+        p_i = (double)n_i / (double)n;
+        p_i_inv = (double)n / (double)n_i;
         H0_gapEntropy_i = p_i * log2(p_i_inv);
         H0_gapEntropy = H0_gapEntropy + H0_gapEntropy_i;
 
