@@ -82,7 +82,6 @@ void Node::printPreorder(Node* node, int len)
     }
     // Deal with the node
     std::cout << node->value;
-    // std::cout << " len: " << len << " newlen: " << newLen;
     if (newLen != len) {
         std::cout << std::endl;
     }

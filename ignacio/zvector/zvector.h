@@ -1,9 +1,15 @@
 #define _USE_MATH_DEFINES
+#include <fstream>
+#include <iostream>
+// #include <iomanip>
+#include <sstream>
+// #include <format>
+// #include <iostream>
+// #include <string>
 #include <algorithm>
 #include <vector>
 #include <cmath>
 #include <climits>
-#include <iostream>
 
 class ZVector {
     private:
@@ -29,6 +35,7 @@ class ZVector {
         std::vector<int> newGapVector() const;
         std::vector<int> getGapVector() const;
         float getGapEntropy() const;
+        float getGapEntropyFromFile(const std::string);      // make zvector from file
         double get_H0_GapEntropy() const;
 
         // RunLen(S)

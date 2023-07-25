@@ -27,11 +27,11 @@ int main(int argc, char * argv[]) {
         std::cout << "\nMatrix: " << std::endl;
         matrix.print();
 
-        std::cout << "\nInt vector:" << std::endl;
-        print_vector(zvector.getIntVector());
-
         std::cout << "\nZ-order vector:" << std::endl;
         print_vector(zvector.getVector());
+
+        std::cout << "\nInt vector:" << std::endl;
+        print_vector(zvector.getIntVector());
 
         std::cout << "\nr-Trie Z-order-vector: " << std::endl;
         print_vector(zvector_rtrie.getVector());
@@ -41,32 +41,32 @@ int main(int argc, char * argv[]) {
         print_vector(zvector_rtrie.getIntVector());
 
         std::cout << "\nWorst case Entropy: " << zvector.getWorstCaseEntropy() << std::endl;
+        std::cout << "\nWorst case Entropy (r-Trie): " << zvector_rtrie.getWorstCaseEntropy() << std::endl;
 
         std::cout << "\nGap vector:" << std::endl;
         print_vector(zvector.getGapVector());
         std::cout << "\nGap Entropy: " << zvector.getGapEntropy() << std::endl;
         std::cout << "\nH_0(Gap):" << zvector.get_H0_GapEntropy() << std::endl;
 
-        std::cout << "\n\nRLE vector:" << std::endl;
-        print_vector(zvector.getRLEVector());
-        std::cout << "\nRLE Entropy: " << zvector.getRLEEntropy() << std::endl;
-        std::cout << "\nH_0(RLE):" << zvector.get_H0_RLEEntropy() << std::endl;
-
-        std::cout << "\nTrie Peorder: " << std::endl;
-        trie.printPreorder(&trie, 0);
-        std::cout << std::endl;
-        std::cout << "Trie Entropy: " << trie.getTrieEntropy(zvector.getIntVector()) << std::endl;
-
-        
         std::cout << "\nGap vector (r-trie):" << std::endl;
         print_vector(zvector_rtrie.getGapVector());
         std::cout << "\nGap Entropy (r-trie): " << zvector_rtrie.getGapEntropy() << std::endl;
         std::cout << "\nH_0(Gap) (r-trie):" << zvector_rtrie.get_H0_GapEntropy() << std::endl;
 
+        std::cout << "\n\nRLE vector:" << std::endl;
+        print_vector(zvector.getRLEVector());
+        std::cout << "\nRLE Entropy: " << zvector.getRLEEntropy() << std::endl;
+        std::cout << "\nH_0(RLE):" << zvector.get_H0_RLEEntropy() << std::endl;
+        
         std::cout << "\n\nRLE vector (r-trie):" << std::endl;
         print_vector(zvector_rtrie.getRLEVector());
         std::cout << "\nRLE Entropy (r-trie): " << zvector_rtrie.getRLEEntropy() << std::endl;
         std::cout << "\nH_0(RLE) (r-trie):" << zvector_rtrie.get_H0_RLEEntropy() << std::endl;
+
+        std::cout << "\nTrie Peorder: " << std::endl;
+        trie.printPreorder(&trie, 0);
+        std::cout << std::endl;
+        std::cout << "Trie Entropy: " << trie.getTrieEntropy(zvector.getIntVector()) << std::endl;
 
         std::cout << "\nTrie Peorder (r-trie): " << std::endl;
         rtrie.printPreorder(&rtrie, 0);
